@@ -305,7 +305,7 @@ return [
                 [
                     'type' => 'js',
                     'asset' => false,
-                    'location' => 'vendor/jquery-validation/jquery.validate.js',
+                    'location' => '/vendor/jquery-validation/jquery.validate.js',
                     //'location' => '//cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/3.1.60/inputmask/jquery.inputmask.js',
                 ]
             ],
@@ -336,7 +336,7 @@ return [
             ],
         ],
         'Sweetalert2' => [
-            'active' => false,
+            'active' => true,
             'files' => [
                 [
                     'type' => 'js',

@@ -14,9 +14,7 @@ use App\Http\Controllers\InvoiceController;
 |
 */
 
-Auth::routes();
-
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::resource('invoices', InvoiceController::class);
-Route::post('invoice-form', [InvoiceController::class, 'invoicePost'])->name('invoice.form');
+// Route::post('invoice-form', [InvoiceController::class, 'invoicePost'])->name('invoice.form');

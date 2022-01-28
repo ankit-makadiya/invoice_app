@@ -4,7 +4,7 @@
 
 @section('content_header')
 <h1>Invoice</h1>
-<h6>New Invoice</h6>
+<h6>Edit Invoice</h6>
 @stop
 @section('css')
 <style>
@@ -28,13 +28,13 @@
                     <div class="form-group row">
                         <label for="customer_name" class="col-sm-2 col-form-label">Customer Name</label>
                         <div class="col-sm-10">
-                            <input type="text" name="customer_name" class="form-control" id="customer_name" placeholder="Customer Name" required>
+                            <input type="text" name="customer_name" class="form-control" id="customer_name" placeholder="Customer Name" required value="{{ $invoice->customer_name ?? '' }}">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="customer_email" class="col-sm-2 col-form-label">Customer Email</label>
                         <div class="col-sm-10">
-                            <input type="email" name="customer_email" class="form-control" id="customer_email" placeholder="Customer Email" value="" required>
+                            <input type="email" name="customer_email" class="form-control" id="customer_email" placeholder="Customer Email" value="{{ $invoice->customer_email ?? '' }}" required>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -56,38 +56,41 @@
                                     </tr>
                                 </thead>
                                 <tbody id="addRow" class="addRow">
+                                    @foreach($invoice->invoiceproduct()->get() as $key => $product)
+                                        <input type="hidden" name="addMore[0][id]" value="{{ $product->id ?? '' }}">
                                     <tr>
                                         <td><input name="addMore[0][product_name]" type="text" class="form-control"
-                                                placeholder="Product Name" required></td>
+                                                placeholder="Product Name" required value="{{ $product->product_name ?? '' }}"></td>
                                         <td><input name="addMore[0][product_price]" type="number" step="0.01"
-                                                class="form-control product_price" placeholder="Product Price" required min="0"></td>
+                                                class="form-control product_price" placeholder="Product Price" required min="0" value="{{ $product->product_price ?? '' }}"></td>
                                         <td><input name="addMore[0][product_discount]" type="number" step="0.01"
-                                                class="form-control product_discount" placeholder="Product Discount" required min="0" max="99.99"></td>
-                                        <td></td>
+                                                class="form-control product_discount" placeholder="Product Discount" required min="0" max="99.99" value="{{ $product->product_discount ?? '' }}"></td>
+                                        <td>@if ($key != 0) <button class="btn btn-danger remove-input-field">Remove</button> @endif</td>
                                     </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Total Items</label>
-                        <div class="col-sm-10" id="total_item">1</div>
-                        <input type="hidden" name="total_item" id="input_total_item" value="1">
+                        <div class="col-sm-10" id="total_item">{{ $invoice->qty ?? '' }}</div>
+                        <input type="hidden" name="total_item" id="input_total_item" value="{{ $invoice->qty ?? '' }}">
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Total Amount</label>
-                        <div class="col-sm-10" id="total_amount">0</div>
-                        <input type="hidden" name="total_amount" id="input_total_amount" value="0">
+                        <div class="col-sm-10" id="total_amount">{{ $invoice->sub_total ?? '' }}</div>
+                        <input type="hidden" name="total_amount" id="input_total_amount" value="{{ $invoice->sub_total ?? '' }}">
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Total Discount Amount</label>
-                        <div class="col-sm-10" id="total_discount_amount">0</div>
-                        <input type="hidden" name="total_discount_amount" id="input_total_discount_amount" value="0">
+                        <div class="col-sm-10" id="total_discount_amount">{{ $invoice->total_discount ?? '' }}</div>
+                        <input type="hidden" name="total_discount_amount" id="input_total_discount_amount" value="{{ $invoice->total_discount ?? '' }}">
                     </div>
                     <div class="form-group row">
                         <label class="col-sm-2 col-form-label">Total Bill</label>
-                        <div class="col-sm-10" id="total_bill">0</div>
-                        <input type="hidden" name="total_bill" id="input_total_bill" value="0">
+                        <div class="col-sm-10" id="total_bill">{{ $invoice->final_total ?? '' }}</div>
+                        <input type="hidden" name="total_bill" id="input_total_bill" value="{{ $invoice->final_total ?? '' }}">
                     </div>
                 </div>
                 <!-- /.card-body -->
@@ -154,8 +157,8 @@ function updatecart(){
 $("#invoice-form").validate({
     submitHandler: function(form) {
         $.ajax({
-            url: "{{ route('invoices.store') }}",
-            type:'POST',
+            url: "{{ route('invoices.update', $invoice->id) }}",
+            type:'PUT',
             data: $(form).serialize(),
             success: function(data) {
                 if($.isEmptyObject(data.error)){

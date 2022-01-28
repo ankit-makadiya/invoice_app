@@ -15,6 +15,6 @@ class Invoice extends Model
 
     public function invoiceproduct()
     {
-        return $this->hasMany(\App\Models\invoiceproduct::class, 'invoice_id', 'id');
+        return $this->hasMany(\App\Models\InvoiceProduct::class, 'invoice_id', 'id');
     }
 }

@@ -3,7 +3,7 @@
 @section('title', 'Invoice | ' . env("APP_NAME"))
 
 @section('content_header')
-<h1>Invoice</h1>
+<h1>Invoice <a href="{{route('invoices.create')}}" class="float-right btn btn-primary">Add New</a></h1>
 @stop
 @section('css')
 @stop
@@ -21,17 +21,25 @@
                 <th>Sub Total</th>
                 <th>Total Discount</th>
                 <th>Final Total</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
+            @foreach ($invoices as $invoice)
             <tr>
-                <td>1</td>
-                <td>sdsds</td>
-                <td>52</td>
-                <td>1</td>
-                <td>sdsds</td>
-                <td>52</td>
+                <td>{{$invoice->id}}</td>
+                <td>{{$invoice->customer_name}}</td>
+                <td>{{$invoice->customer_email}}</td>
+                <td>{{$invoice->qty}}</td>
+                <td>{{$invoice->sub_total}}</td>
+                <td>{{$invoice->total_discount}}</td>
+                <td>{{$invoice->final_total}}</td>
+                <td>
+                    <a href="{{ route('invoices.edit', $invoice->id) }}" class="btn btn-info" title="Click to Edit">Edit</a>
+                    <a href="{{ route('invoices.show', $invoice->id) }}" class="btn btn-info" title="Click to View">View</a>
+                </td>
             </tr>
+            @endforeach
         </tbody>
     </table>
     </div>
